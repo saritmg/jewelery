@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% block title %}
+Order Complete
+{% endblock %}
+
+{% block content %}
+
+<section class="bg0 p-t-52 p-b-20">
+		<div class="container">
+			<div class="row">
+
+<div class="col-md-8 col-lg-9 p-b-80">
+    <h3 class="p-r-45 p-r-0-lg"></h3>
+						<!--  -->
+						<div class="wrap-pic-w how-pos5-parent">
+							<img src="../static/images/order_s.jpg" alt="IMG-BLOG">
+
+							<div class="flex-col-c-m size-119 bg2 how-pos1">
+								<span class="stext-109 cl2 txt-center">
+									<a href="{% url 'home' %}">Back to Home</a>
+								</span>
+
+								<span class="stext-109 cl3 txt-center">
+									<a href="{% url 'cart' %}">Shopping Cart</a>
+								</span>
+							</div>
+						</div>
+
+                        <div class="p-t-40">
+							<h3 class="mtext-113 cl2 p-b-12">
+								        <div class="row row-pb-lg">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="process-wrap">
+                                    <div class="process text-center active">
+                                        <p><span>01</span></p>
+                                        <h3>Shopping Cart</h3>
+                                    </div>
+                                    <div class="process text-center active">
+                                        <p><span>02</span></p>
+                                        <h3>Checkout</h3>
+                                    </div>
+                                    <div class="process text-center">
+                                        <p><span>03</span></p>
+                                        <h3>Order Complete</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 text-center">
+                <span class="icon"><i class="icon-shopping-cart"></i></span>
+                <h2>Thank you for purchasing, Your order is complete</h2>
+                <p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+                    <a href="{% url 'shop' %}" class="btn btn-primary btn-outline">Continue Shopping</a>
+                </p>
+            </div>
+        </div>
+    </div>
+                    </h3>
+</div>
+            </div>
+        </div>
+</section>
+
+
+
+
+						</div>
+					</div>
+				</div>
+
+{% endblock %}

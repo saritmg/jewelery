@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+
+	<!-- Title page -->
+	<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../static/images/bg-01.jpg');">
+		<h2 class="ltext-105 cl0 txt-center">
+			Search Products
+		</h2>
+	</section>
+
+
+	<section class="bg0 p-t-52 p-b-20">
+		<div class="container">
+				<h5 class="ltext-109 cl2 p-b-28">
+					Search products by name or id
+				</h5>
+			<div class="row">
+		<form method="post" action="/search/" name="search_form">
+						{% csrf_token %}
+					<div class="bor8 dis-flex p-l-15">
+						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+							<i class="zmdi zmdi-search"></i>
+						</button>
+
+							<div class="form-group">
+								<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="srh" placeholder="Search">
+							</div>
+
+								<button type="submit" class="btn btn-primary">Search</button>
+
+
+					</div>
+						</form>
+<br><br>
+<div>
+
+	{% if messages %}
+		<ul class="messages">
+			{% for k in messages %}
+			<li style="color: red">{{K}}</li>
+			{% endfor %}
+		</ul>
+    {% endif %}
+
+	<!-- Content page -->
+	{% if sr %}
+	{% for k in sr %}
+	<section class="bg0 p-t-52 p-b-20">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-lg-9 p-b-80">
+					<div class="p-r-45 p-r-0-lg">
+						<!--  -->
+						<div class="wrap-pic-w how-pos5-parent">
+							{% if k.pimage %}
+							<img src="../{{ k.pimage }}" alt="IMG-BLOG">
+							{% endif %}
+						</div>
+
+						<div class="p-t-32">
+
+							<h4 class="ltext-109 cl2 p-b-28">
+								{{ k.pname }}
+							</h4>
+
+							<p class="stext-117 cl6 p-b-26">
+								Price: Rs. {{ k.pprice }}
+							</p>
+
+							<p class="stext-117 cl6 p-b-26">
+								{{ k.pshort_description }}
+							</p>
+
+							<p class="stext-117 cl6 p-b-26">
+								{{ k.plong_description }}
+							</p>
+
+							<p class="stext-117 cl6 p-b-26">
+								Availability: {{ k.pavailability }}
+							</p>
+
+						</div>
+					</div>
+				</div>
+</div>
+		</div>
+		{% endfor %}
+		{% endif %}
+<br>
+		</div>
+	</section>
+
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Login
+{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<section class="bg0 p-t-52 p-b-20">
+    <div class="container">
+
+<div class="row">
+    <div class="col-md-8 col-lg-9 p-b-80">
+        <div class="p-r-45 p-r-0-lg">
+
+    <div class="login-form">
+         <form method="POST" class="post-form">
+            {% csrf_token %}
+            <h2 class="text-center">Log in</h2>
+            <div class="form-group">
+                {{ form | crispy }}
+                <div id='form-errors'>{{ form_errors }}</div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            </div>
+            <div class="clearfix">
+                <label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
+                <a href="{% url 'password_reset' %}" class="pull-right">Forgot Password?</a>
+            </div>
+        </form>
+        <p class="text-center"><a href="{% url 'register' %}">Create an Account</a></p>
+
+        <div>
+            {% for message in messages %}
+            <h3> {{ message }}</h3>
+            {% endfor %}
+        </div>
+
+        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+
+{% endblock %}

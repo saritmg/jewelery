@@ -1,0 +1,290 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <main class="mt-5 pt-5" >
+
+   <div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+						<h4 class="mtext-109 cl2 p-b-30">
+							Checkout Form
+						</h4>
+
+     <form id="billing_form" method="post" action="{% url 'order_complete' %}">
+                    {% csrf_token %}
+                    <div class="row">
+
+                           <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name"> Name</label>
+                                {{form.name}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="first_address">Address</label>
+                                {{form.first_address}}
+                            </div>
+                            <div class="form-group">
+                                {{form.second_address}}
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="town">Town/City</label>
+                                {{form.town}}
+                            </div>
+                        </div>
+
+                           <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email_address">E-mail Address</label>
+                                {{form.email_address}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                                <div class="form-group">
+                                <label for="phone_number">Phone Number</label>
+                                {{form.phone_number}}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+    </div>
+
+	<!-- Shoping Cart -->
+	<form class="bg0 p-t-75 p-b-85">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+					<div class="m-l-25 m-r--38 m-lr-0-xl">
+						<div class="wrap-table-shopping-cart">
+							<table class="table-shopping-cart">
+								<tr class="table_head">
+									<th class="column-1">Product</th>
+									<th class="column-2"></th>
+									<th class="column-3">Price</th>
+									<th class="column-4">Quantity</th>
+									<th class="column-5">Total</th>
+									<th class="column-6">Remove</th>
+								</tr>
+									{% for cart in carts %}
+								<tr class="table_row">
+									<td class="column-1">
+										<div class="how-itemcart1">
+											<img src="../{{cart.product.pimage}}" alt="IMG">
+										</div>
+									</td>
+									<td class="column-2">
+										  <a href="/product_details/{{cart.product.id}}"><h5>{{cart.product.pname}}</h5></a>
+									</td>
+									<td class="column-3">{{cart.product.pprice}}</td>
+									<script type="text/javascript">
+
+										function change_quantity(input, id) {
+											var quantity = input.value;
+											if(quantity < 1) {
+												quantity = 1;
+											}
+
+											if(quantity > 100) {
+												quantity = 100;
+											}
+											$.ajax({ // create an AJAX call...
+												data: {new_quantity: quantity, cart_id: id}, // get the form data
+												type: 'POST', // GET or POST
+												url: '/cart/change_cart_quantity', // the file to call
+												success: function (response) {
+
+													if(response.success == true) {
+														window.location.reload(true); // page refresh
+													}
+												}
+											});
+										}
+                   				    </script>
+									<td class="column-4">
+										<div class="wrap-num-product flex-w m-l-auto m-r-0">
+
+											 <input class="mtext-104 cl3 txt-center num-product" type="number" id="quantity" name="quantity" class="form-control input-number text-center" onchange="change_quantity(this, '{{cart.id}}')" value="{{cart.quantity}}" min="1" max="100">
+
+										</div>
+
+									</td>
+									<td class="column-5">{{cart.total}}</td>
+
+                                    <script>
+                                        function checkTotalItems(itemsInCart) {
+
+                                            if(itemsInCart < 2) {
+                                                $("#error").html("At least one item must be included while placing order.");
+                                                $('#myModal').modal("show");
+                                                return false;
+                                            }
+                                            return true;
+                                        }
+                                    </script>
+									<td class="column-6">
+										  <a onclick="return checkTotalItems('{{carts.count}}')" href="/cart/delete_cart/{{cart.id}}/0"<i class="fs-16 zmdi zmdi-delete"></i></a>
+									</td>
+								</tr>
+								 {% endfor %}
+							</table>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
+						<h4 class="mtext-109 cl2 p-b-30">
+							Cart Totals
+						</h4>
+
+						 <script type='text/javascript'>
+								 $(document).ready(function(){
+									$.ajax(
+							{
+								type:"GET",
+								url: "/cart/get_cart_price_details",
+								success: function( data )
+								{
+									$('#sub_total' ).text("Rs. " + data.sub_total);
+									$('#delivery_charge' ).text("Rs. " + data.delivery_charge);
+									$('#discount' ).text("Rs. " + data.discount);
+									$('#grand_total' ).text("Rs. " + data.total);
+								}
+							 })
+        				  })
+    					 </script>
+
+						<div class="flex-w flex-t bor12 p-b-13">
+							<div class="size-208">
+								<span class="stext-110 cl2">
+									Sub Total:
+								</span>
+							</div>
+
+							<div class="size-209">
+								<span class="mtext-110 cl2">
+									<span>{{price_details.sub_total}}</span>
+                                     <ul>
+                                        {% for cart in carts %}
+                                            <li><span>{{cart.quantity}} x {{cart.product.pname}}</span> <span>{{cart.total}}</span></li>
+                                        {% endfor %}
+                                    </ul>
+								</span>
+							</div>
+						</div>
+
+						<div class="flex-w flex-t bor12 p-b-13">
+							<div class="size-208">
+								<span class="stext-110 cl2">
+									Shipping:
+								</span>
+							</div>
+
+							<div class="size-209">
+								<span class="mtext-110 cl2">
+									<span>{{price_details.delivery_charge}}</span>
+								</span>
+							</div>
+						</div>
+
+						<div class="flex-w flex-t bor12 p-b-13">
+							<div class="size-208">
+								<span class="stext-110 cl2">
+									Discount:
+								</span>
+							</div>
+
+							<div class="size-209">
+								<span class="mtext-110 cl2">
+									 <span>{{price_details.discount}}</span>
+								</span>
+							</div>
+						</div>
+
+						<div class="flex-w flex-t p-t-27 p-b-33">
+							<div class="size-208">
+								<span class="mtext-101 cl2">
+									Order Total:
+								</span>
+							</div>
+
+							<div class="size-209 p-t-1">
+								<span class="mtext-110 cl2">
+									<span>{{price_details.total}}</span>
+								</span>
+							</div>
+						</div>
+
+
+
+						 <!-- Modal -->
+<div class="modal fade" id="myModal_Order" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Store</h4>
+        </div>
+        <div class="modal-body">
+          <p id="msg"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="yesClicked()" class="btn btn-primary" data-dismiss="modal">Yes</button>
+          <button type="button" onclick="noClicked()" class="btn btn-primary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+                <script type="text/javascript">
+
+                    function yesClicked() {
+                        $('form#billing_form').submit();
+                    }
+
+                    function noClicked() {
+
+                    }
+
+                    function submitOrder() {
+                        var name = document.getElementById("id_name").value
+                        var last_name = document.getElementById("id_last_name").value
+                        var first_address = document.getElementById("id_first_address").value
+                        var second_address = document.getElementById("id_second_address").value
+                        var town = document.getElementById("id_town").value
+                        var email_address = document.getElementById("id_email_address").value
+                        var phone_number = document.getElementById("id_phone_number").value
+                        var re = /\S+@\S+\.\S+/;
+                        if(first_name !== '' && last_name !== '' && first_address !==''
+                            && second_address !== '' && town !== '' && email_address !== '' && re.test(email_address) && phone_number !== '') {
+                                $("#msg").html("Are you sure you want to place an order?");
+                                $('#myModal_Order').modal("show");
+                                return false;
+                            }
+                        // return true;
+                    }
+                </script>
+
+                <div class="row">
+                        <div class="col-md-12">
+                                <button onclick="return submitOrder();" form="billing_form" type="submit" class="btn btn-primary">Place an order</button>
+                        </div>
+                </div>
+                    </div>
+                </div>
+					{% endblock %}
+            </div>
+        </div>
+
+
+
